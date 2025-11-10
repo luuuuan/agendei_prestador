@@ -1,0 +1,3306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendei</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary: #4cc9f0;
+            --accent: #f72585;
+            --success: #2ec4b6;
+            --warning: #ff9f1c;
+            --danger: #e71d36;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 10px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+        
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) #f1f1f1;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            font-size: 28px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-upload {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            text-align: center;
+            padding: 2px;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+        
+        .avatar:hover .avatar-upload {
+            bottom: 0;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--dark);
+            text-decoration: none;
+        }
+        
+        .nav-item:hover {
+            background-color: var(--light);
+        }
+        
+        .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .calendar-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .month-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 18px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--light);
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+        
+        .day-header {
+            text-align: center;
+            font-weight: 600;
+            padding: 10px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .day {
+            height: 100px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            padding: 8px;
+            overflow-y: auto;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .day:hover {
+            background-color: var(--light);
+        }
+        
+        .day-number {
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .today {
+            background-color: #e6f7ff;
+            border-color: var(--primary);
+        }
+        
+        .appointment {
+            background-color: var(--primary);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 3px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .appointment:hover {
+            opacity: 0.9;
+            transform: translateX(2px);
+        }
+        
+        .other-month {
+            color: var(--gray);
+            background-color: #f8f9fa;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            background: var(--light);
+            padding: 5px;
+            border-radius: 8px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            flex: 1;
+        }
+        
+        .tab.active {
+            background: white;
+            box-shadow: var(--shadow);
+            font-weight: 600;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px 0;
+            z-index: 1;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            position: sticky;
+            bottom: 0;
+            background: white;
+        }
+        
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .main-content {
+                max-height: none;
+                overflow-y: visible;
+            }
+            
+            .sidebar {
+                max-height: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar {
+                grid-template-columns: repeat(7, 1fr);
+                font-size: 12px;
+            }
+            
+            .day {
+                height: 70px;
+                padding: 4px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .badge-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .badge-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .badge-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .list-item-content {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .list-item-title {
+            font-weight: 500;
+        }
+        
+        .list-item-subtitle {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: var(--light-gray);
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        th {
+            font-weight: 600;
+            color: var(--gray);
+            background-color: var(--light);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .page-section {
+            display: none;
+        }
+        
+        .page-section.active {
+            display: block;
+        }
+        
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 6px;
+            padding: 5px 15px;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .search-box input {
+            border: none;
+            padding: 10px;
+            width: 250px;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            position: relative;
+            height: 300px;
+        }
+        
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pricing-card.featured::before {
+            content: 'POPULAR';
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 30px;
+            font-size: 12px;
+            font-weight: 600;
+            transform: rotate(45deg);
+        }
+        
+        .price {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+        
+        .price-period {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin: 20px 0;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .pricing-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .pricing-features li i {
+            color: var(--success);
+            margin-right: 10px;
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        
+        .toast {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            max-width: 350px;
+        }
+        
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .toast.info {
+            border-left: 4px solid var(--primary);
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 2px dashed var(--light-gray);
+            border-radius: var(--border-radius);
+            background: #fafafa;
+            cursor: pointer;
+            transition: var(--transition);
+            height: 200px;
+        }
+        
+        .file-upload-label:hover {
+            border-color: var(--primary);
+            background: #f0f4ff;
+        }
+        
+        .file-upload-icon {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .file-upload-text {
+            text-align: center;
+            color: var(--gray);
+        }
+        
+        .file-upload-text strong {
+            color: var(--primary);
+        }
+        
+        .file-preview {
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .file-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            transition: var(--transition);
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .language-selector {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 10px;
+            z-index: 100;
+            display: none;
+        }
+        
+        .language-option {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+        
+        .language-option:hover {
+            background: var(--light);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        
+        .pagination button {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--light-gray);
+            background: white;
+            cursor: pointer;
+        }
+        
+        .pagination button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .badge-plan-free {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+        }
+        
+        .badge-plan-basic {
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: white;
+        }
+        
+        .badge-plan-premium {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+        }
+        
+        .access-level-badge {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
+        
+        .access-owner {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .access-admin {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .access-staff {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .company-selector {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            padding: 8px 12px;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .company-selector i {
+            margin-left: 8px;
+            transition: var(--transition);
+        }
+        
+        .company-selector.open i {
+            transform: rotate(180deg);
+        }
+        
+        .company-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .company-dropdown.open {
+            display: block;
+        }
+        
+        .company-option {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--light-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .company-option:hover {
+            background-color: var(--light);
+        }
+        
+        .company-option.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .payment-method {
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .payment-method:hover {
+            border-color: var(--primary);
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .payment-method i {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        .dark-theme {
+            --light: #2d3748;
+            --dark: #f7fafc;
+            --gray: #a0aec0;
+            --light-gray: #4a5568;
+            background-color: #1a202c;
+            color: #f7fafc;
+        }
+        
+        .dark-theme .card,
+        .dark-theme .stat-card,
+        .dark-theme .sidebar,
+        .dark-theme .calendar-container,
+        .dark-theme .table-container,
+        .dark-theme .chart-container,
+        .dark-theme .modal,
+        .dark-theme header {
+            background-color: #2d3748;
+            color: #f7fafc;
+        }
+        
+        .dark-theme .search-box,
+        .dark-theme input,
+        .dark-theme select,
+        .dark-theme textarea {
+            background-color: #2d3748;
+            color: #f7fafc;
+            border-color: #4a5568;
+        }
+        
+        .dark-theme .tabs {
+            background-color: #2d3748;
+        }
+        
+        .dark-theme .tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .dark-theme .day {
+            border-color: #4a5568;
+        }
+        
+        .dark-theme .other-month {
+            background-color: #2d3748;
+        }
+        
+        .dark-theme .list-item {
+            border-color: #4a5568;
+        }
+        
+        .dark-theme th {
+            background-color: #2d3748;
+            color: #f7fafc;
+        }
+        
+        .dark-theme .file-upload-label {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+        
+        .dark-theme .language-selector {
+            background: #2d3748;
+        }
+        
+        .dark-theme .language-option:hover {
+            background: #4a5568;
+        }
+        
+        .dark-theme .company-selector {
+            background: #2d3748;
+        }
+        
+        .dark-theme .company-dropdown {
+            background: #2d3748;
+        }
+        
+        .dark-theme .company-option:hover {
+            background: #4a5568;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-calendar-check"></i>
+                <span>Agendei</span>
+            </div>
+            <div class="user-info">
+                <div class="company-selector">
+                    <span>Minha Empresa</span>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="company-dropdown">
+                        <div class="company-option active">Minha Empresa</div>
+                        <div class="company-option">Empresa 2</div>
+                        <div class="company-option">Empresa 3</div>
+                    </div>
+                </div>
+                <div class="avatar">
+                    <span>JS</span>
+                    <div class="avatar-upload">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <div class="sidebar">
+                <div class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-page="agenda">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Agenda</span>
+                </div>
+                <div class="nav-item" data-page="clientes">
+                    <i class="fas fa-users"></i>
+                    <span>Clientes</span>
+                </div>
+                <div class="nav-item" data-page="servicos">
+                    <i class="fas fa-concierge-bell"></i>
+                    <span>Serviços</span>
+                </div>
+                <div class="nav-item" data-page="profissionais">
+                    <i class="fas fa-user-md"></i>
+                    <span>Profissionais</span>
+                </div>
+                <div class="nav-item" data-page="financeiro">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Financeiro</span>
+                </div>
+                <div class="nav-item" data-page="relatorios">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Relatórios</span>
+                </div>
+                <div class="nav-item" data-page="configuracoes">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <!-- Dashboard -->
+                <div class="page-section active" id="dashboard">
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                <i class="fas fa-calendar-day"></i>
+                                <span>Agendamentos Hoje</span>
+                            </div>
+                            <div class="stat-value">12</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                <i class="fas fa-user-clock"></i>
+                                <span>Agendamentos Pendentes</span>
+                            </div>
+                            <div class="stat-value">5</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                <i class="fas fa-users"></i>
+                                <span>Total de Clientes</span>
+                            </div>
+                            <div class="stat-value">247</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                <i class="fas fa-dollar-sign"></i>
+                                <span>Faturamento Mensal</span>
+                            </div>
+                            <div class="stat-value">R$ 8.245</div>
+                        </div>
+                    </div>
+
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <h2>Agenda</h2>
+                            <div class="month-nav">
+                                <button class="btn btn-outline btn-sm" id="prev-month">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <span id="current-month">Junho 2023</span>
+                                <button class="btn btn-outline btn-sm" id="next-month">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <button class="btn btn-primary" id="new-appointment-btn">
+                                <i class="fas fa-plus"></i>
+                                <span>Novo Agendamento</span>
+                            </button>
+                        </div>
+                        <div class="calendar" id="calendar-days">
+                            <!-- Calendar days will be generated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Próximos Agendamentos</div>
+                                <button class="btn btn-outline btn-sm" id="view-all-appointments">Ver Todos</button>
+                            </div>
+                            <div id="upcoming-appointments">
+                                <!-- Appointments will be loaded here -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Atividades Recentes</div>
+                                <button class="btn btn-outline btn-sm" id="view-all-activities">Ver Todas</button>
+                            </div>
+                            <div id="recent-activities">
+                                <!-- Activities will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agenda -->
+                <div class="page-section" id="agenda">
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-appointments" placeholder="Buscar agendamentos...">
+                        </div>
+                        <div>
+                            <button class="btn btn-outline" id="filter-appointments">
+                                <i class="fas fa-filter"></i>
+                                <span>Filtrar</span>
+                            </button>
+                            <button class="btn btn-primary" id="new-appointment-agenda">
+                                <i class="fas fa-plus"></i>
+                                <span>Novo Agendamento</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tabs" id="agenda-tabs">
+                        <div class="tab active" data-view="day">Dia</div>
+                        <div class="tab" data-view="week">Semana</div>
+                        <div class="tab" data-view="month">Mês</div>
+                        <div class="tab" data-view="list">Lista</div>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="appointments-table">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Serviço</th>
+                                    <th>Profissional</th>
+                                    <th>Data/Hora</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointments-body">
+                                <!-- Appointments will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Clientes -->
+                <div class="page-section" id="clientes">
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-clients" placeholder="Buscar clientes...">
+                        </div>
+                        <div>
+                            <button class="btn btn-outline" id="filter-clients">
+                                <i class="fas fa-filter"></i>
+                                <span>Filtrar</span>
+                            </button>
+                            <button class="btn btn-primary" id="new-client">
+                                <i class="fas fa-plus"></i>
+                                <span>Novo Cliente</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Clientes</div>
+                                <div class="pagination" id="clients-pagination">
+                                    <!-- Pagination will be generated here -->
+                                </div>
+                            </div>
+                            <div id="clients-list">
+                                <!-- Clients will be loaded here -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Detalhes do Cliente</div>
+                            </div>
+                            <div id="client-details">
+                                <div class="empty-state">
+                                    <i class="fas fa-user"></i>
+                                    <h3>Selecione um cliente</h3>
+                                    <p>Clique em um cliente da lista para visualizar seus detalhes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Serviços -->
+                <div class="page-section" id="servicos">
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-services" placeholder="Buscar serviços...">
+                        </div>
+                        <div>
+                            <button class="btn btn-outline" id="filter-services">
+                                <i class="fas fa-filter"></i>
+                                <span>Filtrar</span>
+                            </button>
+                            <button class="btn btn-primary" id="new-service">
+                                <i class="fas fa-plus"></i>
+                                <span>Novo Serviço</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Serviços</div>
+                            </div>
+                            <div id="services-list">
+                                <!-- Services will be loaded here -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Categorias</div>
+                                <button class="btn btn-outline btn-sm" id="new-category">Nova Categoria</button>
+                            </div>
+                            <div id="categories-list">
+                                <!-- Categories will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profissionais -->
+                <div class="page-section" id="profissionais">
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-professionals" placeholder="Buscar profissionais...">
+                        </div>
+                        <div>
+                            <button class="btn btn-outline" id="filter-professionals">
+                                <i class="fas fa-filter"></i>
+                                <span>Filtrar</span>
+                            </button>
+                            <button class="btn btn-primary" id="new-professional">
+                                <i class="fas fa-plus"></i>
+                                <span>Novo Profissional</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Profissionais</div>
+                            </div>
+                            <div id="professionals-list">
+                                <!-- Professionals will be loaded here -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Horários de Trabalho</div>
+                            </div>
+                            <div id="working-hours">
+                                <div class="empty-state">
+                                    <i class="fas fa-clock"></i>
+                                    <h3>Horários</h3>
+                                    <p>Selecione um profissional para gerenciar seus horários</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financeiro -->
+                <div class="page-section" id="financeiro">
+                    <div class="filter-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-financial" placeholder="Buscar transações...">
+                        </div>
+                        <div>
+                            <button class="btn btn-outline" id="export-financial">
+                                <i class="fas fa-download"></i>
+                                <span>Exportar</span>
+                            </button>
+                            <button class="btn btn-primary" id="new-transaction">
+                                <i class="fas fa-plus"></i>
+                                <span>Nova Transação</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                <i class="fas fa-dollar-sign"></i>
+                                <span>Faturamento do Mês</span>
+                            </div>
+                            <div class="stat-value">R$ 8.245</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>Recebido</span>
+                            </div>
+                            <div class="stat-value">R$ 6.890</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                <i class="fas fa-clock"></i>
+                                <span>Pendente</span>
+                            </div>
+                            <div class="stat-value">R$ 1.355</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Crescimento</span>
+                            </div>
+                            <div class="stat-value">+12%</div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="financial-table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Cliente</th>
+                                    <th>Serviço</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                    <th>Forma de Pagamento</th>
+                                </tr>
+                            </thead>
+                            <tbody id="financial-body">
+                                <!-- Financial records will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Relatórios -->
+                <div class="page-section" id="relatorios">
+                    <div class="filter-bar">
+                        <div>
+                            <button class="btn btn-outline" id="current-month-report">
+                                <i class="fas fa-calendar"></i>
+                                <span>Este Mês</span>
+                            </button>
+                            <button class="btn btn-outline" id="filter-reports">
+                                <i class="fas fa-filter"></i>
+                                <span>Filtrar</span>
+                            </button>
+                            <button class="btn btn-primary" id="export-report">
+                                <i class="fas fa-download"></i>
+                                <span>Exportar Relatório</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="card-header">
+                            <div class="card-title">Desempenho Mensal</div>
+                            <div class="tabs" id="report-tabs">
+                                <div class="tab active" data-chart="sales">Vendas</div>
+                                <div class="tab" data-chart="clients">Clientes</div>
+                                <div class="tab" data-chart="services">Serviços</div>
+                            </div>
+                        </div>
+                        <div id="chart-container" style="height: 250px; display: flex; align-items: center; justify-content: center; color: var(--gray);">
+                            <div style="text-align: center;">
+                                <i class="fas fa-chart-bar" style="font-size: 48px; margin-bottom: 15px;"></i>
+                                <p>Gráfico de desempenho será exibido aqui</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Serviços Mais Populares</div>
+                            </div>
+                            <div id="popular-services">
+                                <!-- Popular services will be loaded here -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Profissionais em Destaque</div>
+                            </div>
+                            <div id="top-professionals">
+                                <!-- Top professionals will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configurações -->
+                <div class="page-section" id="configuracoes">
+                    <div class="tabs" id="settings-tabs">
+                        <div class="tab active" data-settings="general">Geral</div>
+                        <div class="tab" data-settings="notifications">Notificações</div>
+                        <div class="tab" data-settings="payments">Pagamentos</div>
+                        <div class="tab" data-settings="integrations">Integrações</div>
+                        <div class="tab" data-settings="users">Usuários</div>
+                    </div>
+
+                    <div id="settings-content">
+                        <!-- Settings content will be loaded here based on active tab -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for creating new items -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">Novo Item</div>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Modal content will be loaded here -->
+            </div>
+            <div class="modal-footer" id="modal-footer">
+                <!-- Modal buttons will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // Data storage
+        let data = {
+            clients: [
+                { id: 1, name: "João Silva", email: "joao.silva@email.com", phone: "(11) 99999-9999", plan: "basic", avatar: "JS" },
+                { id: 2, name: "Ana Santos", email: "ana.santos@email.com", phone: "(11) 98888-8888", plan: "premium", avatar: "AS" },
+                { id: 3, name: "Pedro Costa", email: "pedro.costa@email.com", phone: "(11) 97777-7777", plan: "free", avatar: "PC" },
+                { id: 4, name: "Mariana Oliveira", email: "mariana.oliveira@email.com", phone: "(11) 96666-6666", plan: "basic", avatar: "MO" }
+            ],
+            services: [
+                { id: 1, name: "Corte de Cabelo", duration: 30, price: 40.00, category: "Cabelereiro" },
+                { id: 2, name: "Massagem Relaxante", duration: 60, price: 120.00, category: "Massagem" },
+                { id: 3, name: "Depilação", duration: 45, price: 80.00, category: "Estética" },
+                { id: 4, name: "Manicure e Pedicure", duration: 60, price: 60.00, category: "Manicure" }
+            ],
+            professionals: [
+                { id: 1, name: "Maria Santos", specialty: "Cabelereira", rating: 4.8, avatar: "MS", access: "owner" },
+                { id: 2, name: "Carlos Oliveira", specialty: "Massoterapeuta", rating: 4.9, avatar: "CO", access: "admin" },
+                { id: 3, name: "Ana Pereira", specialty: "Esteticista", rating: 4.7, avatar: "AP", access: "staff" },
+                { id: 4, name: "Juliana Lima", specialty: "Manicure", rating: 4.8, avatar: "JL", access: "staff" }
+            ],
+            appointments: [
+                { id: 1, clientId: 1, serviceId: 1, professionalId: 1, date: "2023-06-19", time: "14:00", status: "confirmed" },
+                { id: 2, clientId: 2, serviceId: 2, professionalId: 2, date: "2023-06-19", time: "15:30", status: "pending" },
+                { id: 3, clientId: 3, serviceId: 3, professionalId: 3, date: "2023-06-20", time: "10:00", status: "confirmed" },
+                { id: 4, clientId: 4, serviceId: 4, professionalId: 4, date: "2023-06-20", time: "11:30", status: "cancelled" }
+            ],
+            categories: [
+                { id: 1, name: "Cabelereiro", serviceCount: 5 },
+                { id: 2, name: "Estética", serviceCount: 8 },
+                { id: 3, name: "Massagem", serviceCount: 3 },
+                { id: 4, name: "Manicure", serviceCount: 4 }
+            ],
+            financial: [
+                { id: 1, date: "2023-06-19", clientId: 1, serviceId: 1, amount: 40.00, status: "paid", paymentMethod: "Cartão de Crédito" },
+                { id: 2, date: "2023-06-19", clientId: 2, serviceId: 2, amount: 120.00, status: "pending", paymentMethod: "Dinheiro" },
+                { id: 3, date: "2023-06-18", clientId: 3, serviceId: 3, amount: 80.00, status: "paid", paymentMethod: "PIX" },
+                { id: 4, date: "2023-06-17", clientId: 4, serviceId: 4, amount: 60.00, status: "cancelled", paymentMethod: "Cartão de Débito" }
+            ]
+        };
+
+// Selected professional (simula o prestador logado) - inicializado com o primeiro profissional disponível
+let selectedProfessionalId = data.professionals && data.professionals.length ? data.professionals[0].id : null;
+
+
+
+        // Utility functions
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+            
+            toast.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+
+        function openModal(title, content, buttons) {
+            const modal = document.getElementById('modal');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalFooter = document.getElementById('modal-footer');
+            
+            modalTitle.textContent = title;
+            modalBody.innerHTML = content;
+            modalFooter.innerHTML = buttons;
+            
+            modalOverlay.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modalOverlay = document.getElementById('modal-overlay');
+            modalOverlay.style.display = 'none';
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        function formatTime(timeString) {
+            return timeString;
+        }
+
+        // Calendar functionality
+        let currentDate = new Date();
+        
+        function renderCalendar() {
+            const calendarDays = document.getElementById('calendar-days');
+            const currentMonthElement = document.getElementById('current-month');
+            
+            // Set current month text
+            currentMonthElement.textContent = currentDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+            
+            // Clear calendar
+            calendarDays.innerHTML = '';
+            
+            // Add day headers
+            const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            daysOfWeek.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.textContent = day;
+                calendarDays.appendChild(dayHeader);
+            });
+            
+            // Get first day of month and last day of previous month
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            const lastDayPrevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+            
+            // Add days from previous month
+            const prevMonthDays = firstDay.getDay();
+            for (let i = prevMonthDays - 1; i >= 0; i--) {
+                const day = document.createElement('div');
+                day.className = 'day other-month';
+                day.textContent = lastDayPrevMonth.getDate() - i;
+                calendarDays.appendChild(day);
+            }
+            
+            // Add days of current month
+            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+            const today = new Date();
+            
+            for (let i = 1; i <= daysInMonth; i++) {
+                const day = document.createElement('div');
+                day.className = 'day';
+                
+                // Check if it's today
+                if (i === today.getDate() && 
+                    currentDate.getMonth() === today.getMonth() && 
+                    currentDate.getFullYear() === today.getFullYear()) {
+                    day.classList.add('today');
+                }
+                
+                day.innerHTML = `<div class="day-number">${i}</div>`;
+                
+                // Add appointments for this day
+                const dateString = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const dayAppointments = data.appointments.filter(apt => apt.date === dateString);
+                
+                dayAppointments.forEach(apt => {
+                    const client = data.clients.find(c => c.id === apt.clientId);
+                    const service = data.services.find(s => s.id === apt.serviceId);
+                    
+                    if (client && service) {
+                        const appointmentEl = document.createElement('div');
+                        appointmentEl.className = `appointment ${apt.status}`;
+                        appointmentEl.textContent = `${client.name} - ${service.name}`;
+                        appointmentEl.addEventListener('click', () => {
+                            showAppointmentDetails(apt.id);
+                        });
+                        day.appendChild(appointmentEl);
+                    }
+                });
+                
+                calendarDays.appendChild(day);
+            }
+            
+            // Add days from next month to complete the grid
+            const totalCells = 42; // 6 rows x 7 days
+            const remainingCells = totalCells - (prevMonthDays + daysInMonth);
+            
+            for (let i = 1; i <= remainingCells; i++) {
+                const day = document.createElement('div');
+                day.className = 'day other-month';
+                day.textContent = i;
+                calendarDays.appendChild(day);
+            }
+        }
+
+        function showAppointmentDetails(appointmentId) {
+            const appointment = data.appointments.find(apt => apt.id === appointmentId);
+            if (!appointment) return;
+            
+            const client = data.clients.find(c => c.id === appointment.clientId);
+            const service = data.services.find(s => s.id === appointment.serviceId);
+            const professional = data.professionals.find(p => p.id === appointment.professionalId);
+            
+            if (!client || !service || !professional) return;
+            
+            let statusText = '';
+            let statusClass = '';
+            
+            switch(appointment.status) {
+                case 'confirmed':
+                    statusText = 'Confirmado';
+                    statusClass = 'badge-success';
+                    break;
+                case 'pending':
+                    statusText = 'Pendente';
+                    statusClass = 'badge-warning';
+                    break;
+                case 'finalized':
+                    statusText = 'Concluído';
+                    statusClass = 'badge-success';
+                    break;
+                case 'cancelled':
+                    statusText = 'Cancelado';
+                    statusClass = 'badge-danger';
+                    break;
+            }
+            
+            const content = `
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <input type="text" value="${client.name}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Serviço</label>
+                    <input type="text" value="${service.name}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Profissional</label>
+                    <input type="text" value="${professional.name}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Data</label>
+                    <input type="text" value="${formatDate(appointment.date)}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Hora</label>
+                    <input type="text" value="${formatTime(appointment.time)}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <div>
+                        <span class="badge ${statusClass}">${statusText}</span>
+                    </div>
+                </div>
+            `;
+            
+            
+            // Build action buttons dynamically based on role and status
+            let buttons = `<button class="btn btn-primary" id="close-modal">Fechar</button>`;
+
+            // If the logged-in/selected professional is the owner of this appointment, show quick actions
+            if (appointment.professionalId === selectedProfessionalId) {
+                if (appointment.status === 'pending') {
+                    buttons = `
+                        <button class="btn btn-success" id="confirm-appointment">Confirmar</button>
+                        <button class="btn btn-danger" id="refuse-appointment">Recusar</button>
+                    ` + buttons;
+                } else if (appointment.status === 'confirmed') {
+                    buttons = `<button class="btn btn-warning" id="finalize-appointment">Finalizar</button>` + buttons;
+                }
+            } else {
+                // Not the professional — show Edit only (as before)
+                buttons = `<button class="btn btn-outline" id="edit-appointment">Editar</button>` + buttons;
+            }
+
+            
+            openModal('Detalhes do Agendamento', content, buttons);
+            
+            document.getElementById('edit-appointment').addEventListener('click', () => {
+                closeModal();
+                showAppointmentForm(appointmentId);
+            });
+            
+            document.getElementById('close-modal').addEventListener('click', closeModal);
+        }
+
+        function showAppointmentForm(appointmentId = null) {
+            const isEdit = appointmentId !== null;
+            const appointment = isEdit ? data.appointments.find(apt => apt.id === appointmentId) : null;
+            
+            const content = `
+                <div class="form-group">
+                    <label for="appointment-client">Cliente</label>
+                    <select id="appointment-client" required>
+                        <option value="">Selecione um cliente</option>
+                        ${data.clients.map(client => `
+                            <option value="${client.id}" ${isEdit && appointment.clientId === client.id ? 'selected' : ''}>
+                                ${client.name}
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-service">Serviço</label>
+                    <select id="appointment-service" required>
+                        <option value="">Selecione um serviço</option>
+                        ${data.services.map(service => `
+                            <option value="${service.id}" ${isEdit && appointment.serviceId === service.id ? 'selected' : ''}>
+                                ${service.name} - ${formatCurrency(service.price)}
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-professional">Profissional</label>
+                    <select id="appointment-professional" required>
+                        <option value="">Selecione um profissional</option>
+                        ${data.professionals.map(professional => `
+                            <option value="${professional.id}" ${isEdit && appointment.professionalId === professional.id ? 'selected' : ''}>
+                                ${professional.name} - ${professional.specialty}
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-date">Data</label>
+                    <input type="date" id="appointment-date" value="${isEdit ? appointment.date : ''}" required>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-time">Hora</label>
+                    <input type="time" id="appointment-time" value="${isEdit ? appointment.time : ''}" required>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-status">Status</label>
+                    <select id="appointment-status" required>
+                        <option value="pending" ${isEdit && appointment.status === 'pending' ? 'selected' : ''}>Pendente</option>
+                        <option value="confirmed" ${isEdit && appointment.status === 'confirmed' ? 'selected' : ''}>Confirmado</option>
+                        <option value="cancelled" ${isEdit && appointment.status === 'cancelled' ? 'selected' : ''}>Cancelado</option>
+                    </select>
+                </div>
+            `;
+            
+            const buttons = `
+                <button class="btn btn-outline" id="cancel-appointment">Cancelar</button>
+                <button class="btn btn-primary" id="save-appointment">${isEdit ? 'Atualizar' : 'Criar'} Agendamento</button>
+            `;
+            
+            openModal(isEdit ? 'Editar Agendamento' : 'Novo Agendamento', content, buttons);
+            
+            document.getElementById('cancel-appointment').addEventListener('click', closeModal);
+            document.getElementById('save-appointment').addEventListener('click', () => {
+                saveAppointment(appointmentId);
+            });
+        }
+
+        function saveAppointment(appointmentId) {
+            const clientId = parseInt(document.getElementById('appointment-client').value);
+            const serviceId = parseInt(document.getElementById('appointment-service').value);
+            const professionalId = parseInt(document.getElementById('appointment-professional').value);
+            const date = document.getElementById('appointment-date').value;
+            const time = document.getElementById('appointment-time').value;
+            const status = document.getElementById('appointment-status').value;
+            
+            if (!clientId || !serviceId || !professionalId || !date || !time) {
+                showToast('Preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+            
+            if (appointmentId) {
+                // Update existing appointment
+                const appointmentIndex = data.appointments.findIndex(apt => apt.id === appointmentId);
+                if (appointmentIndex !== -1) {
+                    data.appointments[appointmentIndex] = {
+                        ...data.appointments[appointmentIndex],
+                        clientId,
+                        serviceId,
+                        professionalId,
+                        date,
+                        time,
+                        status
+                    };
+                }
+                showToast('Agendamento atualizado com sucesso', 'success');
+            } else {
+                // Create new appointment
+                const newId = data.appointments.length > 0 ? Math.max(...data.appointments.map(a => a.id)) + 1 : 1;
+                data.appointments.push({
+                    id: newId,
+                    clientId,
+                    serviceId,
+                    professionalId,
+                    date,
+                    time,
+                    status
+                });
+                showToast('Agendamento criado com sucesso', 'success');
+            }
+            
+            closeModal();
+            renderCalendar();
+            loadAppointmentsTable();
+            loadUpcomingAppointments();
+        }
+
+        // Client management
+        function showClientForm(clientId = null) {
+            const isEdit = clientId !== null;
+            const client = isEdit ? data.clients.find(c => c.id === clientId) : null;
+            
+            const content = `
+                <div class="form-group">
+                    <label for="client-name">Nome</label>
+                    <input type="text" id="client-name" value="${isEdit ? client.name : ''}" required>
+                </div>
+                <div class="form-group">
+                    <label for="client-email">E-mail</label>
+                    <input type="email" id="client-email" value="${isEdit ? client.email : ''}" required>
+                </div>
+                <div class="form-group">
+                    <label for="client-phone">Telefone</label>
+                    <input type="tel" id="client-phone" value="${isEdit ? client.phone : ''}" required>
+                </div>
+                <div class="form-group">
+                    <label for="client-plan">Plano</label>
+                    <select id="client-plan" required>
+                        <option value="free" ${isEdit && client.plan === 'free' ? 'selected' : ''}>Grátis</option>
+                        <option value="basic" ${isEdit && client.plan === 'basic' ? 'selected' : ''}>Básico</option>
+                        <option value="premium" ${isEdit && client.plan === 'premium' ? 'selected' : ''}>Premium</option>
+                    </select>
+                </div>
+            `;
+            
+            const buttons = `
+                <button class="btn btn-outline" id="cancel-client">Cancelar</button>
+                <button class="btn btn-primary" id="save-client">${isEdit ? 'Atualizar' : 'Criar'} Cliente</button>
+            `;
+            
+            openModal(isEdit ? 'Editar Cliente' : 'Novo Cliente', content, buttons);
+            
+            document.getElementById('cancel-client').addEventListener('click', closeModal);
+            document.getElementById('save-client').addEventListener('click', () => {
+                saveClient(clientId);
+            });
+        }
+
+        function saveClient(clientId) {
+            const name = document.getElementById('client-name').value;
+            const email = document.getElementById('client-email').value;
+            const phone = document.getElementById('client-phone').value;
+            const plan = document.getElementById('client-plan').value;
+            
+            if (!name || !email || !phone || !plan) {
+                showToast('Preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+            
+            if (clientId) {
+                // Update existing client
+                const clientIndex = data.clients.findIndex(c => c.id === clientId);
+                if (clientIndex !== -1) {
+                    data.clients[clientIndex] = {
+                        ...data.clients[clientIndex],
+                        name,
+                        email,
+                        phone,
+                        plan
+                    };
+                }
+                showToast('Cliente atualizado com sucesso', 'success');
+            } else {
+                // Create new client
+                const newId = data.clients.length > 0 ? Math.max(...data.clients.map(c => c.id)) + 1 : 1;
+                const avatar = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                data.clients.push({
+                    id: newId,
+                    name,
+                    email,
+                    phone,
+                    plan,
+                    avatar
+                });
+                showToast('Cliente criado com sucesso', 'success');
+            }
+            
+            closeModal();
+            loadClientsList();
+        }
+
+        function showClientDetails(clientId) {
+            const client = data.clients.find(c => c.id === clientId);
+            if (!client) return;
+            
+            let planBadge = '';
+            switch(client.plan) {
+                case 'free':
+                    planBadge = '<span class="badge badge-plan-free">Plano Grátis</span>';
+                    break;
+                case 'basic':
+                    planBadge = '<span class="badge badge-plan-basic">Plano Básico</span>';
+                    break;
+                case 'premium':
+                    planBadge = '<span class="badge badge-plan-premium">Plano Premium</span>';
+                    break;
+            }
+            
+            const clientAppointments = data.appointments.filter(apt => apt.clientId === clientId);
+            
+            const content = `
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <div class="avatar" style="width: 60px; height: 60px; font-size: 20px;">${client.avatar}</div>
+                    <div style="margin-left: 15px;">
+                        <h3>${client.name}</h3>
+                        ${planBadge}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="text" value="${client.email}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Telefone</label>
+                    <input type="text" value="${client.phone}" readonly>
+                </div>
+                
+                <div class="card-header">
+                    <div class="card-title">Agendamentos</div>
+                </div>
+                
+                ${clientAppointments.length > 0 ? 
+                    clientAppointments.map(apt => {
+                        const service = data.services.find(s => s.id === apt.serviceId);
+                        const professional = data.professionals.find(p => p.id === apt.professionalId);
+                        
+                        let statusBadge = '';
+                        switch(apt.status) {
+                            case 'confirmed':
+                                statusBadge = '<span class="badge badge-success">Confirmado</span>';
+                                break;
+                            case 'pending':
+                                statusBadge = '<span class="badge badge-warning">Pendente</span>';
+                                break;
+                            case 'cancelled':
+                                statusBadge = '<span class="badge badge-danger">Cancelado</span>';
+                                break;
+                        }
+                        
+                        return `
+                            <div class="list-item">
+                                <div class="list-item-content">
+                                    <div class="list-item-title">${service ? service.name : 'Serviço não encontrado'}</div>
+                                    <div class="list-item-subtitle">${formatDate(apt.date)} ${formatTime(apt.time)} - ${professional ? professional.name : 'Profissional não encontrado'}</div>
+                                </div>
+                                ${statusBadge}
+                            </div>
+                        `;
+                    }).join('') : 
+                    '<p>Nenhum agendamento encontrado</p>'
+                }
+            `;
+            
+            document.getElementById('client-details').innerHTML = content;
+        }
+
+        // Service management
+        function showServiceForm(serviceId = null) {
+            const isEdit = serviceId !== null;
+            const service = isEdit ? data.services.find(s => s.id === serviceId) : null;
+            
+            const content = `
+                <div class="form-group">
+                    <label for="service-name">Nome</label>
+                    <input type="text" id="service-name" value="${isEdit ? service.name : ''}" required>
+                </div>
+                <div class="form-group">
+                    <label for="service-duration">Duração (minutos)</label>
+                    <input type="number" id="service-duration" value="${isEdit ? service.duration : ''}" required>
+                </div>
+                <div class="form-group">
+                    <label for="service-price">Preço (R$)</label>
+                    <input type="number" id="service-price" step="0.01" value="${isEdit ? service.price : ''}" required>
+                </div>
+                <div class="form-group">
+                    <label for="service-category">Categoria</label>
+                    <select id="service-category" required>
+                        <option value="">Selecione uma categoria</option>
+                        ${data.categories.map(cat => `
+                            <option value="${cat.id}" ${isEdit && service.category === cat.name ? 'selected' : ''}>
+                                ${cat.name}
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+            `;
+            
+            const buttons = `
+                <button class="btn btn-outline" id="cancel-service">Cancelar</button>
+                <button class="btn btn-primary" id="save-service">${isEdit ? 'Atualizar' : 'Criar'} Serviço</button>
+            `;
+            
+            openModal(isEdit ? 'Editar Serviço' : 'Novo Serviço', content, buttons);
+            
+            document.getElementById('cancel-service').addEventListener('click', closeModal);
+            document.getElementById('save-service').addEventListener('click', () => {
+                saveService(serviceId);
+            });
+        }
+
+        function saveService(serviceId) {
+            const name = document.getElementById('service-name').value;
+            const duration = parseInt(document.getElementById('service-duration').value);
+            const price = parseFloat(document.getElementById('service-price').value);
+            const categoryId = parseInt(document.getElementById('service-category').value);
+            const category = data.categories.find(cat => cat.id === categoryId);
+            
+            if (!name || !duration || !price || !category) {
+                showToast('Preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+            
+            if (serviceId) {
+                // Update existing service
+                const serviceIndex = data.services.findIndex(s => s.id === serviceId);
+                if (serviceIndex !== -1) {
+                    data.services[serviceIndex] = {
+                        ...data.services[serviceIndex],
+                        name,
+                        duration,
+                        price,
+                        category: category.name
+                    };
+                }
+                showToast('Serviço atualizado com sucesso', 'success');
+            } else {
+                // Create new service
+                const newId = data.services.length > 0 ? Math.max(...data.services.map(s => s.id)) + 1 : 1;
+                data.services.push({
+                    id: newId,
+                    name,
+                    duration,
+                    price,
+                    category: category.name
+                });
+                showToast('Serviço criado com sucesso', 'success');
+            }
+            
+            closeModal();
+            loadServicesList();
+        }
+
+        // Professional management
+        function showProfessionalForm(professionalId = null) {
+            const isEdit = professionalId !== null;
+            const professional = isEdit ? data.professionals.find(p => p.id === professionalId) : null;
+            
+            const content = `
+                <div class="form-group">
+                    <label for="professional-name">Nome</label>
+                    <input type="text" id="professional-name" value="${isEdit ? professional.name : ''}" required>
+                </div>
+                <div class="form-group">
+                    <label for="professional-specialty">Especialidade</label>
+                    <input type="text" id="professional-specialty" value="${isEdit ? professional.specialty : ''}" required>
+                </div>
+                <div class="form-group">
+                    <label for="professional-rating">Avaliação</label>
+                    <input type="number" id="professional-rating" step="0.1" min="0" max="5" value="${isEdit ? professional.rating : ''}">
+                </div>
+                <div class="form-group">
+                    <label for="professional-access">Nível de Acesso</label>
+                    <select id="professional-access" required>
+                        <option value="staff" ${isEdit && professional.access === 'staff' ? 'selected' : ''}>Equipe</option>
+                        <option value="admin" ${isEdit && professional.access === 'admin' ? 'selected' : ''}>Administrador</option>
+                        <option value="owner" ${isEdit && professional.access === 'owner' ? 'selected' : ''}>Proprietário</option>
+                    </select>
+                </div>
+            `;
+            
+            const buttons = `
+                <button class="btn btn-outline" id="cancel-professional">Cancelar</button>
+                <button class="btn btn-primary" id="save-professional">${isEdit ? 'Atualizar' : 'Criar'} Profissional</button>
+            `;
+            
+            openModal(isEdit ? 'Editar Profissional' : 'Novo Profissional', content, buttons);
+            
+            document.getElementById('cancel-professional').addEventListener('click', closeModal);
+            document.getElementById('save-professional').addEventListener('click', () => {
+                saveProfessional(professionalId);
+            });
+        }
+
+        function saveProfessional(professionalId) {
+            const name = document.getElementById('professional-name').value;
+            const specialty = document.getElementById('professional-specialty').value;
+            const rating = parseFloat(document.getElementById('professional-rating').value);
+            const access = document.getElementById('professional-access').value;
+            
+            if (!name || !specialty || !rating || !access) {
+                showToast('Preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+            
+            if (professionalId) {
+                // Update existing professional
+                const professionalIndex = data.professionals.findIndex(p => p.id === professionalId);
+                if (professionalIndex !== -1) {
+                    data.professionals[professionalIndex] = {
+                        ...data.professionals[professionalIndex],
+                        name,
+                        specialty,
+                        rating,
+                        access
+                    };
+                }
+                showToast('Profissional atualizado com sucesso', 'success');
+            } else {
+                // Create new professional
+                const newId = data.professionals.length > 0 ? Math.max(...data.professionals.map(p => p.id)) + 1 : 1;
+                const avatar = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                data.professionals.push({
+                    id: newId,
+                    name,
+                    specialty,
+                    rating,
+                    access,
+                    avatar
+                });
+                showToast('Profissional criado com sucesso', 'success');
+            }
+            
+            closeModal();
+            loadProfessionalsList();
+        }
+
+        // Data loading functions
+        function loadUpcomingAppointments() {
+            const container = document.getElementById('upcoming-appointments');
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Get appointments from today onwards
+            const upcoming = data.appointments
+                .filter(apt => apt.date >= today)
+                .sort((a, b) => {
+                    if (a.date === b.date) {
+                        return a.time.localeCompare(b.time);
+                    }
+                    return a.date.localeCompare(b.date);
+                })
+                .slice(0, 4); // Show only next 4 appointments
+            
+            if (upcoming.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-day"></i><p>Nenhum agendamento futuro</p></div>';
+                return;
+            }
+            
+            container.innerHTML = upcoming.map(apt => {
+                const client = data.clients.find(c => c.id === apt.clientId);
+                const service = data.services.find(s => s.id === apt.serviceId);
+                const professional = data.professionals.find(p => p.id === apt.professionalId);
+                
+                let statusBadge = '';
+                switch(apt.status) {
+                    case 'confirmed':
+                        statusBadge = '<span class="badge badge-success">Confirmado</span>';
+                        break;
+                    case 'pending':
+                        statusBadge = '<span class="badge badge-warning">Pendente</span>';
+                        break;
+                    case 'cancelled':
+                        statusBadge = '<span class="badge badge-danger">Cancelado</span>';
+                        break;
+                    case 'finalized':
+                        statusBadge = '<span class="badge badge-success">Concluído</span>';
+                        break;
+                }
+                
+                const isToday = apt.date === today;
+                const dateText = isToday ? 'Hoje' : formatDate(apt.date);
+                
+                return `
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-title">${client ? client.name : 'Cliente não encontrado'} - ${service ? service.name : 'Serviço não encontrado'}</div>
+                            <div class="list-item-subtitle">${dateText}, ${formatTime(apt.time)} - ${professional ? professional.name : 'Profissional não encontrado'}</div>
+                        </div>
+                        ${statusBadge}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadRecentActivities() {
+            const container = document.getElementById('recent-activities');
+            
+            // For demo purposes, we'll create some sample activities
+            const activities = [
+                { type: 'appointment', description: 'Novo agendamento criado', details: 'João Silva - 19 Jun, 14:00', date: 'Hoje' },
+                { type: 'payment', description: 'Pagamento recebido', details: 'R$ 85,00 - Ana Santos', date: 'Hoje' },
+                { type: 'client', description: 'Cliente cadastrado', details: 'Pedro Costa', date: 'Ontem' },
+                { type: 'appointment', description: 'Agendamento cancelado', details: 'Mariana Oliveira - 20 Jun, 11:30', date: 'Ontem' }
+            ];
+            
+            container.innerHTML = activities.map(activity => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-title">${activity.description}</div>
+                        <div class="list-item-subtitle">${activity.details}</div>
+                    </div>
+                    <span class="badge badge-primary">${activity.date}</span>
+                </div>
+            `).join('');
+        }
+
+        function loadAppointmentsTable() {
+            const tbody = document.getElementById('appointments-body');
+            
+            if (data.appointments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Nenhum agendamento encontrado</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.appointments.map(apt => {
+                const client = data.clients.find(c => c.id === apt.clientId);
+                const service = data.services.find(s => s.id === apt.serviceId);
+                const professional = data.professionals.find(p => p.id === apt.professionalId);
+                
+                let statusBadge = '';
+                switch(apt.status) {
+                    case 'confirmed':
+                        statusBadge = '<span class="badge badge-success">Confirmado</span>';
+                        break;
+                    case 'pending':
+                        statusBadge = '<span class="badge badge-warning">Pendente</span>';
+                        break;
+                    case 'cancelled':
+                        statusBadge = '<span class="badge badge-danger">Cancelado</span>';
+                        break;
+                    case 'finalized':
+                        statusBadge = '<span class="badge badge-success">Concluído</span>';
+                        break;
+                }
+                
+                return `
+                    <tr>
+                        <td>${client ? client.name : 'Cliente não encontrado'}</td>
+                        <td>${service ? service.name : 'Serviço não encontrado'}</td>
+                        <td>${professional ? professional.name : 'Profissional não encontrado'}</td>
+                        <td>${formatDate(apt.date)} ${formatTime(apt.time)}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <button class="btn btn-outline btn-sm edit-appointment" data-id="${apt.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline btn-sm delete-appointment" data-id="${apt.id}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Add event listeners to edit and delete buttons
+            document.querySelectorAll('.edit-appointment').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const appointmentId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    showAppointmentForm(appointmentId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-appointment').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const appointmentId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    deleteAppointment(appointmentId);
+                });
+            });
+        }
+
+        function deleteAppointment(appointmentId) {
+            if (confirm('Tem certeza que deseja excluir este agendamento?')) {
+                data.appointments = data.appointments.filter(apt => apt.id !== appointmentId);
+                showToast('Agendamento excluído com sucesso', 'success');
+                renderCalendar();
+                loadAppointmentsTable();
+                loadUpcomingAppointments();
+            }
+        }
+
+        function loadClientsList() {
+            const container = document.getElementById('clients-list');
+            
+            if (data.clients.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>Nenhum cliente cadastrado</p></div>';
+                return;
+            }
+            
+            container.innerHTML = data.clients.map(client => {
+                let planBadge = '';
+                switch(client.plan) {
+                    case 'free':
+                        planBadge = '<span class="badge badge-plan-free">Plano Grátis</span>';
+                        break;
+                    case 'basic':
+                        planBadge = '<span class="badge badge-plan-basic">Plano Básico</span>';
+                        break;
+                    case 'premium':
+                        planBadge = '<span class="badge badge-plan-premium">Plano Premium</span>';
+                        break;
+                }
+                
+                return `
+                    <div class="list-item client-item" data-id="${client.id}">
+                        <div class="avatar" style="width: 40px; height: 40px; font-size: 16px;">${client.avatar}</div>
+                        <div class="list-item-content" style="flex: 1; margin-left: 15px;">
+                            <div class="list-item-title">${client.name}</div>
+                            <div class="list-item-subtitle">${client.email} • ${client.phone}</div>
+                        </div>
+                        ${planBadge}
+                    </div>
+                `;
+            }).join('');
+            
+            // Add event listeners to client items
+            document.querySelectorAll('.client-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    const clientId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    showClientDetails(clientId);
+                });
+            });
+        }
+
+        function loadServicesList() {
+            const container = document.getElementById('services-list');
+            
+            if (data.services.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-concierge-bell"></i><p>Nenhum serviço cadastrado</p></div>';
+                return;
+            }
+            
+            container.innerHTML = data.services.map(service => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-title">${service.name}</div>
+                        <div class="list-item-subtitle">Duração: ${service.duration} min • ${formatCurrency(service.price)}</div>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline btn-sm edit-service" data-id="${service.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline btn-sm delete-service" data-id="${service.id}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add event listeners to edit and delete buttons
+            document.querySelectorAll('.edit-service').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const serviceId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    showServiceForm(serviceId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-service').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const serviceId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    deleteService(serviceId);
+                });
+            });
+        }
+
+        function deleteService(serviceId) {
+            if (confirm('Tem certeza que deseja excluir este serviço?')) {
+                data.services = data.services.filter(s => s.id !== serviceId);
+                showToast('Serviço excluído com sucesso', 'success');
+                loadServicesList();
+            }
+        }
+
+        function loadCategoriesList() {
+            const container = document.getElementById('categories-list');
+            
+            if (data.categories.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-tags"></i><p>Nenhuma categoria cadastrada</p></div>';
+                return;
+            }
+            
+            container.innerHTML = data.categories.map(category => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-title">${category.name}</div>
+                        <div class="list-item-subtitle">${category.serviceCount} serviços</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadProfessionalsList() {
+            const container = document.getElementById('professionals-list');
+            
+            if (data.professionals.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-user-md"></i><p>Nenhum profissional cadastrado</p></div>';
+                return;
+            }
+            
+            container.innerHTML = data.professionals.map(professional => {
+                let accessBadge = '';
+                switch(professional.access) {
+                    case 'owner':
+                        accessBadge = '<span class="access-level-badge access-owner">Proprietária</span>';
+                        break;
+                    case 'admin':
+                        accessBadge = '<span class="access-level-badge access-admin">Administrador</span>';
+                        break;
+                    case 'staff':
+                        accessBadge = '<span class="access-level-badge access-staff">Equipe</span>';
+                        break;
+                }
+                
+                return `
+                    <div class="list-item">
+                        <div class="avatar" style="width: 40px; height: 40px; font-size: 16px;">${professional.avatar}</div>
+                        <div class="list-item-content" style="flex: 1; margin-left: 15px;">
+                            <div class="list-item-title">${professional.name}</div>
+                            <div class="list-item-subtitle">${professional.specialty} • ${professional.rating} ★</div>
+                        </div>
+                        ${accessBadge}
+                        <div style="margin-left: 10px;">
+                            <button class="btn btn-outline btn-sm edit-professional" data-id="${professional.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline btn-sm delete-professional" data-id="${professional.id}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Add event listeners to edit and delete buttons
+            document.querySelectorAll('.edit-professional').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const professionalId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    showProfessionalForm(professionalId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-professional').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const professionalId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    deleteProfessional(professionalId);
+                });
+            });
+        }
+
+        function deleteProfessional(professionalId) {
+            if (confirm('Tem certeza que deseja excluir este profissional?')) {
+                data.professionals = data.professionals.filter(p => p.id !== professionalId);
+                showToast('Profissional excluído com sucesso', 'success');
+                loadProfessionalsList();
+            }
+        }
+
+        function loadFinancialTable() {
+            const tbody = document.getElementById('financial-body');
+            
+            if (data.financial.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Nenhuma transação encontrada</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.financial.map(transaction => {
+                const client = data.clients.find(c => c.id === transaction.clientId);
+                const service = data.services.find(s => s.id === transaction.serviceId);
+                
+                let statusBadge = '';
+                switch(transaction.status) {
+                    case 'paid':
+                        statusBadge = '<span class="badge badge-success">Pago</span>';
+                        break;
+                    case 'pending':
+                        statusBadge = '<span class="badge badge-warning">Pendente</span>';
+                        break;
+                    case 'cancelled':
+                        statusBadge = '<span class="badge badge-danger">Cancelado</span>';
+                        break;
+                    case 'finalized':
+                        statusBadge = '<span class="badge badge-success">Concluído</span>';
+                        break;
+                }
+                
+                return `
+                    <tr>
+                        <td>${formatDate(transaction.date)}</td>
+                        <td>${client ? client.name : 'Cliente não encontrado'}</td>
+                        <td>${service ? service.name : 'Serviço não encontrado'}</td>
+                        <td>${formatCurrency(transaction.amount)}</td>
+                        <td>${statusBadge}</td>
+                        <td>${transaction.paymentMethod}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadPopularServices() {
+            const container = document.getElementById('popular-services');
+            
+            // For demo purposes, we'll create some sample data
+            const popularServices = [
+                { name: 'Corte de Cabelo', count: 45, percentage: 32 },
+                { name: 'Massagem Relaxante', count: 28, percentage: 20 },
+                { name: 'Manicure e Pedicure', count: 25, percentage: 18 },
+                { name: 'Depilação', count: 20, percentage: 14 }
+            ];
+            
+            container.innerHTML = popularServices.map(service => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-title">${service.name}</div>
+                        <div class="list-item-subtitle">${service.count} agendamentos</div>
+                    </div>
+                    <span class="badge badge-primary">${service.percentage}%</span>
+                </div>
+            `).join('');
+        }
+
+        function loadTopProfessionals() {
+            const container = document.getElementById('top-professionals');
+            
+            container.innerHTML = data.professionals.map(professional => {
+                const appointmentCount = data.appointments.filter(apt => apt.professionalId === professional.id).length;
+                
+                return `
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-title">${professional.name}</div>
+                            <div class="list-item-subtitle">${professional.rating} ★ • ${appointmentCount} serviços</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadSettingsContent() {
+            const container = document.getElementById('settings-content');
+            
+            const generalSettings = `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Configurações Gerais</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="company-name">Nome da Empresa</label>
+                        <input type="text" id="company-name" value="Meu Salão de Beleza">
+                    </div>
+                    <div class="form-group">
+                        <label for="company-email">E-mail</label>
+                        <input type="email" id="company-email" value="contato@meusalao.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="company-phone">Telefone</label>
+                        <input type="tel" id="company-phone" value="(11) 99999-9999">
+                    </div>
+                    <div class="form-group">
+                        <label for="company-address">Endereço</label>
+                        <textarea id="company-address" rows="3">Rua das Flores, 123 - Centro, São Paulo - SP</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="business-hours">Horário de Funcionamento</label>
+                        <select id="business-hours">
+                            <option>Segunda a Sexta: 8h às 18h</option>
+                            <option>Segunda a Sábado: 8h às 20h</option>
+                            <option>Todos os dias: 9h às 22h</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" id="save-general-settings">Salvar Configurações</button>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = generalSettings;
+            
+            document.getElementById('save-general-settings').addEventListener('click', () => {
+                showToast('Configurações salvas com sucesso', 'success');
+            });
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            const pageSections = document.querySelectorAll('.page-section');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const targetPage = this.getAttribute('data-page');
+                    
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    pageSections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetPage) {
+                            section.classList.add('active');
+                            
+                            // Load specific content for each page
+                            if (targetPage === 'dashboard') {
+                                loadUpcomingAppointments();
+                                loadRecentActivities();
+                            } else if (targetPage === 'agenda') {
+                                loadAppointmentsTable();
+                            } else if (targetPage === 'clientes') {
+                                loadClientsList();
+                            } else if (targetPage === 'servicos') {
+                                loadServicesList();
+                                loadCategoriesList();
+                            } else if (targetPage === 'profissionais') {
+                                loadProfessionalsList();
+                            } else if (targetPage === 'financeiro') {
+                                loadFinancialTable();
+                            } else if (targetPage === 'relatorios') {
+                                loadPopularServices();
+                                loadTopProfessionals();
+                            } else if (targetPage === 'configuracoes') {
+                                loadSettingsContent();
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Calendar navigation
+            document.getElementById('prev-month').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar();
+            });
+            
+            document.getElementById('next-month').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar();
+            });
+            
+            // New appointment buttons
+            document.getElementById('new-appointment-btn').addEventListener('click', () => {
+                showAppointmentForm();
+            });
+            
+            document.getElementById('new-appointment-agenda').addEventListener('click', () => {
+                showAppointmentForm();
+            });
+            
+            // New client button
+            document.getElementById('new-client').addEventListener('click', () => {
+                showClientForm();
+            });
+            
+            // New service button
+            document.getElementById('new-service').addEventListener('click', () => {
+                showServiceForm();
+            });
+            
+            // New professional button
+            document.getElementById('new-professional').addEventListener('click', () => {
+                showProfessionalForm();
+            });
+            
+            // New category button
+            document.getElementById('new-category').addEventListener('click', () => {
+                showToast('Funcionalidade de categorias em desenvolvimento', 'info');
+            });
+            
+            // Modal close
+            document.getElementById('modal-close').addEventListener('click', closeModal);
+            document.getElementById('modal-overlay').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('modal-overlay')) {
+                    closeModal();
+                }
+            });
+            
+            // Theme toggle
+            document.querySelector('.theme-toggle').addEventListener('click', function() {
+                document.body.classList.toggle('dark-theme');
+                const icon = this.querySelector('i');
+                if (document.body.classList.contains('dark-theme')) {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
+            });
+            
+            // Company selector
+            const companySelector = document.querySelector('.company-selector');
+            const companyDropdown = document.querySelector('.company-dropdown');
+            const companyOptions = document.querySelectorAll('.company-option');
+            
+            companySelector.addEventListener('click', function() {
+                companyDropdown.classList.toggle('open');
+                this.classList.toggle('open');
+            });
+            
+            companyOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const companyName = this.textContent;
+                    companySelector.querySelector('span').textContent = companyName;
+                    
+                    companyOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    companyDropdown.classList.remove('open');
+                    companySelector.classList.remove('open');
+                    
+                    showToast(`Empresa alterada para ${companyName}`, 'success');
+                });
+            });
+            
+            // Initialize data
+            renderCalendar();
+            loadUpcomingAppointments();
+            loadRecentActivities();
+            loadAppointmentsTable();
+            loadClientsList();
+            loadServicesList();
+            loadCategoriesList();
+            loadProfessionalsList();
+            loadFinancialTable();
+            loadPopularServices();
+            loadTopProfessionals();
+            loadSettingsContent();
+            
+            
+/* =================== Novas funções para Prestador (UCs) =================== */
+
+function confirmAppointment(appointmentId) {
+    const apt = data.appointments.find(a => a.id === appointmentId);
+    if (!apt) return;
+    apt.status = 'confirmed';
+    showToast(`Agendamento com ${data.clients.find(c=>c.id===apt.clientId).name} confirmado!`, 'success');
+    renderCalendar();
+    loadAppointmentsTable();
+    loadUpcomingAppointments();
+    closeModal();
+}
+
+function refuseAppointment(appointmentId) {
+    if (!confirm('Deseja realmente recusar este agendamento?')) return;
+    data.appointments = data.appointments.map(a => a.id === appointmentId ? {...a, status: 'cancelled'} : a);
+    showToast('Agendamento recusado.', 'error');
+    renderCalendar();
+    loadAppointmentsTable();
+    loadUpcomingAppointments();
+    closeModal();
+}
+
+function finalizeAppointment(appointmentId) {
+    const aptIndex = data.appointments.findIndex(a => a.id === appointmentId);
+    if (aptIndex === -1) return;
+    data.appointments[aptIndex].status = 'finalized';
+    showToast('Atendimento finalizado!', 'success');
+    renderCalendar();
+    loadAppointmentsTable();
+    loadUpcomingAppointments();
+    closeModal();
+}
+
+/* ====== Gerenciamento de Horários (simplificado) ====== */
+function renderWorkingHours(professionalId = selectedProfessionalId) {
+    const container = document.getElementById('working-hours');
+    if (!professionalId) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-clock"></i><h3>Horários</h3><p>Selecione um profissional para gerenciar seus horários</p></div>';
+        return;
+    }
+    const prof = data.professionals.find(p => p.id === professionalId);
+    if (!prof) {
+        container.innerHTML = '<p>Profissional não encontrado</p>';
+        return;
+    }
+    if (!prof.workingHours) prof.workingHours = [];
+
+    let html = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div><strong>Horários de ${prof.name}</strong></div>
+                    <div>
+                        <button class="btn btn-outline" id="add-working-hour">Adicionar Horário</button>
+                    </div>
+                </div>`;
+    if (prof.workingHours.length === 0) {
+        html += '<div class="empty-state"><i class="fas fa-clock"></i><p>Nenhum horário cadastrado</p></div>';
+    } else {
+        html += `<div class="working-hours-list">`;
+        prof.workingHours.forEach((h, idx) => {
+            html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--light-gray);">
+                        <div>${h.date} • ${h.start} - ${h.end} ${h.repeat ? '(Recorrente)' : ''}</div>
+                        <div>
+                            <button class="btn btn-outline btn-sm" data-idx="${idx}" onclick="deleteWorkingHour(${professionalId}, ${idx})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+        });
+        html += `</div>`;
+    }
+    container.innerHTML = html;
+
+    const addBtn = document.getElementById('add-working-hour');
+    if (addBtn) addBtn.addEventListener('click', () => showAddWorkingHourForm(professionalId));
+}
+
+function showAddWorkingHourForm(professionalId) {
+    const container = document.getElementById('working-hours');
+    const formHtml = `
+        <div style="background:white; padding:12px; border-radius:8px; box-shadow:var(--shadow);">
+            <div class="form-group"><label>Data (ou deixe em branco para recorrente semanal)</label><input type="date" id="wh-date"></div>
+            <div class="form-group"><label>Início</label><input type="time" id="wh-start" required></div>
+            <div class="form-group"><label>Fim</label><input type="time" id="wh-end" required></div>
+            <div class="form-group"><label><input type="checkbox" id="wh-repeat"> Repetir semanalmente</label></div>
+            <div style="display:flex; gap:10px; margin-top:8px;">
+                <button class="btn btn-outline" id="wh-cancel">Cancelar</button>
+                <button class="btn btn-primary" id="wh-save">Salvar Horário</button>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', formHtml);
+    document.getElementById('wh-cancel').addEventListener('click', () => renderWorkingHours(professionalId));
+    document.getElementById('wh-save').addEventListener('click', () => saveWorkingHour(professionalId));
+}
+
+function saveWorkingHour(professionalId) {
+    const prof = data.professionals.find(p => p.id === professionalId);
+    if (!prof) return;
+    const date = document.getElementById('wh-date').value;
+    const start = document.getElementById('wh-start').value;
+    const end = document.getElementById('wh-end').value;
+    const repeat = document.getElementById('wh-repeat').checked;
+
+    if (!start || !end) {
+        showToast('Informe horário de início e fim', 'error');
+        return;
+    }
+    if (end <= start) {
+        showToast('Horário final deve ser maior que início', 'error');
+        return;
+    }
+
+    if (date) {
+        const conflict = data.appointments.some(a => a.professionalId === professionalId && a.date === date && a.time >= start && a.time < end && a.status !== 'cancelled');
+        if (conflict) {
+            showToast('Conflito de horário com agendamento existente (RN-03). Ajuste o horário.', 'error');
+            return;
+        }
+    }
+
+    if (!prof.workingHours) prof.workingHours = [];
+    prof.workingHours.push({ date, start, end, repeat });
+    showToast('Horário adicionado com sucesso', 'success');
+    renderWorkingHours(professionalId);
+}
+
+function deleteWorkingHour(professionalId, idx) {
+    const prof = data.professionals.find(p => p.id === professionalId);
+    if (!prof || !prof.workingHours || !prof.workingHours[idx]) return;
+    if (!confirm('Excluir este horário?')) return;
+    prof.workingHours.splice(idx, 1);
+    showToast('Horário excluído', 'info');
+    renderWorkingHours(professionalId);
+}
+
+function setActiveProfessional(professionalId) {
+    selectedProfessionalId = professionalId;
+    const prof = data.professionals.find(p => p.id === professionalId);
+    if (!prof) return;
+    const avatarEl = document.querySelector('header .avatar span');
+    if (avatarEl) avatarEl.textContent = prof.avatar || prof.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+    let nameEl = document.querySelector('header .user-name');
+    if (!nameEl) {
+        nameEl = document.createElement('div');
+        nameEl.className = 'user-name';
+        nameEl.style.marginLeft = '10px';
+        document.querySelector('header .user-info').insertBefore(nameEl, document.querySelector('header .user-info').firstChild);
+    }
+    nameEl.textContent = prof.name;
+    renderWorkingHours(professionalId);
+}
+
+
+/* =================== UC.011 - Gerenciar Dados Bancários =================== */
+
+function renderBankData(professionalId = selectedProfessionalId) {
+    const container = document.getElementById('bank-data');
+    if (!container) return;
+
+    const prof = data.professionals.find(p => p.id === professionalId);
+    if (!prof) {
+        container.innerHTML = '<p>Profissional não encontrado.</p>';
+        return;
+    }
+
+    if (!prof.bankData) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-credit-card"></i>
+                <h3>Nenhum dado bancário cadastrado</h3>
+                <p>Cadastre seus dados bancários para receber seus pagamentos.</p>
+                <button class="btn btn-primary" id="add-bank-data">Cadastrar Dados Bancários</button>
+            </div>`;
+        document.getElementById('add-bank-data').addEventListener('click', () => showBankDataForm(professionalId));
+        return;
+    }
+
+    const { bank, agency, account, type, document } = prof.bankData;
+    container.innerHTML = `
+        <div class="card" style="padding: 20px;">
+            <h3>Dados Bancários</h3>
+            <div class="form-group"><strong>Banco:</strong> ${bank}</div>
+            <div class="form-group"><strong>Agência:</strong> ${agency}</div>
+            <div class="form-group"><strong>Conta:</strong> ${account}</div>
+            <div class="form-group"><strong>Tipo:</strong> ${type}</div>
+            <div class="form-group"><strong>CPF/CNPJ:</strong> ${document}</div>
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button class="btn btn-outline" id="edit-bank-data">Editar</button>
+                <button class="btn btn-danger" id="delete-bank-data">Remover</button>
+            </div>
+        </div>`;
+
+    document.getElementById('edit-bank-data').addEventListener('click', () => showBankDataForm(professionalId, prof.bankData));
+    document.getElementById('delete-bank-data').addEventListener('click', () => deleteBankData(professionalId));
+}
+
+function showBankDataForm(professionalId, existingData = null) {
+    const container = document.getElementById('bank-data');
+    if (!container) return;
+
+    const form = `
+        <div class="card" style="padding:20px;">
+            <h3>${existingData ? 'Editar' : 'Cadastrar'} Dados Bancários</h3>
+            <div class="form-group"><label>Banco</label><input type="text" id="bank-name" value="${existingData?.bank || ''}" required></div>
+            <div class="form-group"><label>Agência</label><input type="text" id="bank-agency" value="${existingData?.agency || ''}" required></div>
+            <div class="form-group"><label>Conta</label><input type="text" id="bank-account" value="${existingData?.account || ''}" required></div>
+            <div class="form-group"><label>Tipo de Conta</label>
+                <select id="bank-type">
+                    <option value="Corrente" ${existingData?.type==='Corrente'?'selected':''}>Corrente</option>
+                    <option value="Poupança" ${existingData?.type==='Poupança'?'selected':''}>Poupança</option>
+                </select>
+            </div>
+            <div class="form-group"><label>CPF/CNPJ</label><input type="text" id="bank-doc" value="${existingData?.document || ''}" required></div>
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button class="btn btn-outline" id="cancel-bank">Cancelar</button>
+                <button class="btn btn-primary" id="save-bank">Salvar</button>
+            </div>
+        </div>`;
+
+    container.innerHTML = form;
+    document.getElementById('cancel-bank').addEventListener('click', () => renderBankData(professionalId));
+    document.getElementById('save-bank').addEventListener('click', () => saveBankData(professionalId));
+}
+
+function saveBankData(professionalId) {
+    const bank = document.getElementById('bank-name').value.trim();
+    const agency = document.getElementById('bank-agency').value.trim();
+    const account = document.getElementById('bank-account').value.trim();
+    const type = document.getElementById('bank-type').value.trim();
+    const documentValue = document.getElementById('bank-doc').value.replace(/\D/g, '');
+
+    if (!bank || !agency || !account || !type || !documentValue) {
+        showToast('Preencha todos os campos.', 'error');
+        return;
+    }
+
+    if (!/^\d{4,5}$/.test(agency)) {
+        showToast('Agência deve conter apenas números (4 a 5 dígitos).', 'error');
+        return;
+    }
+
+    if (!/^\d{4,}-?\d{0,1}$/.test(account)) {
+        showToast('Conta deve conter apenas números e opcionalmente hífen.', 'error');
+        return;
+    }
+
+    if (!(documentValue.length === 11 || documentValue.length === 14)) {
+        showToast('CPF deve ter 11 dígitos e CNPJ 14 dígitos.', 'error');
+        return;
+    }
+
+    const prof = data.professionals.find(p => p.id === professionalId);
+    if (!prof) return;
+
+    prof.bankData = { bank, agency, account, type, document: documentValue };
+    showToast('Dados bancários salvos com sucesso!', 'success');
+    renderBankData(professionalId);
+}
+
+function deleteBankData(professionalId) {
+    if (!confirm('Deseja realmente remover seus dados bancários?')) return;
+    const prof = data.professionals.find(p => p.id === professionalId);
+    if (!prof) return;
+    prof.bankData = null;
+    showToast('Dados bancários removidos.', 'info');
+    renderBankData(professionalId);
+}
+
+/* ======================================================================== */
+/* ======================================================================== */
+showToast('Sistema carregado com sucesso!', 'success');
+        });
+    </script>
+</body>
+</html>
